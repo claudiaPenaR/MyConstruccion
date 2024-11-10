@@ -6,13 +6,16 @@
 	<artifactId>my-construccion</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
-	
-	 <repositories>
-		        <repository>
-		            <id>Artifacty</id>
-		            <url>http://localhost:8082/ui/admin/repositories/local/MyContruccionRep</url>
-		        </repository>
-   	 </repositories>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.1</version>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencies>
 		<!-- Dependencia de Servlets API -->
 		<dependency>
