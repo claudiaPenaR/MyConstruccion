@@ -29,7 +29,7 @@ pipeline {
                         "files": [
                             {
                                 "pattern": "target/*.war",
-                                "target": "http://localhost:8082/artifactory/MyContruccionRep/"
+                                "target": "MyContruccionRep/"
                             }
                         ]
                     }"""
