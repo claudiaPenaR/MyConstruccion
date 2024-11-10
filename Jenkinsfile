@@ -11,7 +11,7 @@ pipeline {
         stage('Construir WAR') {
             steps {
                 script {
-                    sh 'mvn clean install'
+                    bat 'mvn clean install'
                 }
             }
         }
