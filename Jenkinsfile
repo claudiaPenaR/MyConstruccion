@@ -18,5 +18,26 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.war'
             }
         }
+        stage('Subir a Artifactory') {
+            steps {
+                script {
+                    // Configuración para subir el artefacto a Artifactory
+                    def server = Artifactory.server 'Artifacty' // Cambia 'my-artifactory-server-id' por el ID configurado en Jenkins
+                    
+                    // Define las especificaciones de subida
+                    def uploadSpec = """{
+                        "files": [
+                            {
+                                "pattern": "target/*.war",
+                                "target": "libs-release-local/"
+                            }
+                        ]
+                    }"""
+
+                    // Sube el artefacto
+                    server.upload spec: uploadSpec
+                }
+            }
+        }
     }
 }
