@@ -1,5 +1,5 @@
 groovy
-Copiar código
+
 pipeline {
     agent any
     stages {
