@@ -29,7 +29,7 @@ pipeline {
                         "files": [
                             {
                                 "pattern": "target/*.war",
-                                "target": "MyContruccionRep/"
+                                "target": "MyContruccionRep"
                             }
                         ]
                     }"""
