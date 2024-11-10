@@ -15,6 +15,12 @@
 			</plugin>
 		</plugins>
 	</build>
+	<distributionManagement>
+		    <repository>
+		        <id>Artifacty</id>
+		        <url> http://localhost:8082/artifactory/MyContruccionRep/</url>
+		    </repository>
+	</distributionManagement>
 
 	<dependencies>
 		<!-- Dependencia de Servlets API -->
