@@ -20,12 +20,12 @@
 	    <repository>
 	        <id>central</id>
 	        <name>LAPTOP-RLLI0KB6-releases</name>
-	        <url>http://localhost:8081/artifactory/MyContruccionRep</url>
+	        <url>http://localhost:8082/artifactory/MyContruccionRep</url>
 	    </repository>
 	    <snapshotRepository>
 	        <id>snapshots</id>
 	        <name>LAPTOP-RLLI0KB6-snapshots</name>
-	        <url>http://localhost:8081/artifactory/MyContruccionRep</url>
+	        <url>http://localhost:8082/artifactory/MyContruccionRep</url>
 	    </snapshotRepository>
 	</distributionManagement>
 
