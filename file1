@@ -6,9 +6,9 @@
     }
     
     environment {
-        GITHUB_REPO = 'https://github.com/briggstones/myconstruccion.git'
+        GITHUB_REPO = 'https://github.com/claudiaPenaR/MyConstruccion.git'
         ARTIFACTORY_URL = 'http://localhost:8082/artifactory'
-        WAR_FILE = 'my-construccion-1.0-SNAPSHOT.war'
+        WAR_FILE = 'my-construccion-0.0.1-SNAPSHOT.war'
     }
     
     stages {
@@ -51,7 +51,7 @@
                 script {
                     // Usar el nombre correcto del archivo WAR
                     bat """
-                        curl -u itadmin:Caine0027* ^
+                        curl -u admin1978:Admin1978/ ^
                         -X PUT "${ARTIFACTORY_URL}/my-construccion-local/com/myconstruccion/%BUILD_NUMBER%/${WAR_FILE}" ^
                         -T "target/${WAR_FILE}"
                     """
