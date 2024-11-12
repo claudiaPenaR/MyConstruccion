@@ -1,54 +1,73 @@
-pipeline {
+pipeline 
+{
     agent any
+    
+    tools {
+        maven 'Maven3'
+    }
+    
+    environment {
+        GITHUB_REPO = 'https://github.com/claudiaPenaR/MyConstruccion.git'
+        ARTIFACTORY_URL = 'http://localhost:8082/artifactory'
+        WAR_FILE = 'my-construccion-0.0.1-SNAPSHOT.war'
+    }
+    
     stages {
-        stage('Preparar Ambiente') {
+        stage('Clean Workspace') {
             steps {
                 script {
-                    // Verifica si existe el directorio de clonación y lo elimina
-                    if (fileExists('MyConstruccion')) {
-                        echo 'Directorio ya existe. Eliminando...'
-                        deleteDir() // Elimina el directorio de trabajo actual
-                    }
+                    // Limpiar workspace de forma segura
+                    bat 'if exist * del /F /Q *'
+                    bat 'for /d %%i in (*) do rd /s /q "%%i"'
+                    bat 'if exist .git rd /s /q .git'
                 }
             }
         }
-        stage('Clonar') {
+        
+        stage('Checkout') {
             steps {
-                git 'https://github.com/claudiaPenaR/MyConstruccion.git'
+                bat "git clone ${GITHUB_REPO} ."
             }
         }
-        stage('Construir WAR') {
+        
+        stage('Build') {
             steps {
-                script {
-                    bat 'mvn clean install'
+                bat 'mvn clean package -DskipTests'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '/target/surefire-reports/*.xml'
                 }
             }
         }
-        stage('Archivar WAR') {
-            steps {
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.war'
-            }
-        }
-        stage('Subir a Artifactory') {
+        
+        stage('Deploy to Artifactory') {
             steps {
                 script {
-                    // Configuración para subir el artefacto a Artifactory
-                    def server = Artifactory.server 'Artifacty' // Cambia 'Artifacty' por el ID configurado en Jenkins
-                    
-                    // Define las especificaciones de subida
-                    def uploadSpec = """{
-                        "files": [
-                            {
-                                "pattern": "target/*.war",
-                                "target": "MyConstruccionRep"
-                            }
-                        ]
-                    }"""
-
-                    // Sube el artefacto
-                    server.upload spec: uploadSpec
+                    // Usar el nombre correcto del archivo WAR
+                    bat """
+                        curl -u admin1978:Admin1978/ ^
+                        -X PUT "${ARTIFACTORY_URL}/my-construccion-local/com/myconstruccion/%BUILD_NUMBER%/${WAR_FILE}" ^
+                        -T "target/${WAR_FILE}"
+                    """
                 }
             }
         }
     }
+    
+    post {
+        success {
+            echo 'Pipeline ejecutado exitosamente!'
+            archiveArtifacts artifacts: "target/${WAR_FILE}", fingerprint: true
+        }
+        failure {
+            echo 'Pipeline falló'
+        }
+    }
 }
