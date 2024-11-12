@@ -1,6 +1,17 @@
 pipeline {
     agent any
     stages {
+        stage('Preparar Ambiente') {
+            steps {
+                script {
+                    // Verifica si existe el directorio de clonación y lo elimina
+                    if (fileExists('MyConstruccion')) {
+                        echo 'Directorio ya existe. Eliminando...'
+                        deleteDir() // Elimina el directorio de trabajo actual
+                    }
+                }
+            }
+        }
         stage('Clonar') {
             steps {
                 git 'https://github.com/claudiaPenaR/MyConstruccion.git'
@@ -22,14 +33,14 @@ pipeline {
             steps {
                 script {
                     // Configuración para subir el artefacto a Artifactory
-                    def server = Artifactory.server 'Artifacty' // Cambia 'my-artifactory-server-id' por el ID configurado en Jenkins
+                    def server = Artifactory.server 'Artifacty' // Cambia 'Artifacty' por el ID configurado en Jenkins
                     
                     // Define las especificaciones de subida
                     def uploadSpec = """{
                         "files": [
                             {
                                 "pattern": "target/*.war",
-                                "target": "MyContruccionRep"
+                                "target": "MyConstruccionRep"
                             }
                         ]
                     }"""
