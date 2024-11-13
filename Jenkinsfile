@@ -1,4 +1,5 @@
-pipeline {
+pipeline 
+{
     agent any
     
     tools {
@@ -7,34 +8,66 @@ pipeline {
     
     environment {
         GITHUB_REPO = 'https://github.com/claudiaPenaR/MyConstruccion.git'
+        ARTIFACTORY_URL = 'http://localhost:8082/artifactory'
+        WAR_FILE = 'my-construccion-0.0.1-SNAPSHOT.war'
     }
     
     stages {
+        stage('Clean Workspace') {
+            steps {
+                script {
+                    // Limpiar workspace de forma segura
+                    bat 'if exist * del /F /Q *'
+                    bat 'for /d %%i in (*) do rd /s /q "%%i"'
+                    bat 'if exist .git rd /s /q .git'
+                }
+            }
+        }
+        
+        stage('Checkout') {
+            steps {
+                bat "git clone ${GITHUB_REPO} ."
+            }
+        }
+        
         stage('Build') {
             steps {
-                echo 'Building...'
+                bat 'mvn clean package -DskipTests'
             }
         }
         
         stage('Test') {
             steps {
-                echo 'Testing...'
+                bat 'mvn test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '/target/surefire-reports/*.xml'
+                }
             }
         }
         
-        stage('Deploy') {
+        stage('Deploy to Artifactory') {
             steps {
-                echo 'Deploying...'
+                script {
+                    // Usar el nombre correcto del archivo WAR
+                    bat """
+                        curl -u admin1978:Admin1978/ ^
+                        -X PUT "${ARTIFACTORY_URL}/MyContruccionRep/proyecto/%BUILD_NUMBER%/${WAR_FILE}" ^
+                        -T "target/${WAR_FILE}"
+                    """
+                }
             }
         }
     }
     
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Pipeline ejecutado exitosamente!'
+            archiveArtifacts artifacts: "target/${WAR_FILE}", fingerprint: true
         }
         failure {
-            echo 'Pipeline failed.'
-        }
-    }
-} // Cierre del bloque pipeline
+            echo 'Pipeline falló'
+        }
+    }
+}
