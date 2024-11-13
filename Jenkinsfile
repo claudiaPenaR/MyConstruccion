@@ -1,5 +1,4 @@
-pipeline 
-{
+pipeline {
     agent any
     
     tools {
@@ -42,7 +41,7 @@ pipeline
             }
             post {
                 always {
-                    junit allowEmptyResults: true, testResults: '/target/surefire-reports/*.xml'
+                    junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml'
                 }
             }
         }
@@ -52,8 +51,8 @@ pipeline
                 script {
                     // Usar el nombre correcto del archivo WAR
                     bat """
-                        curl -u admin1978:Admin1978/ ^
-                        -X PUT "${ARTIFACTORY_URL}/MyContruccionRep/proyecto/%BUILD_NUMBER%/${WAR_FILE}" ^
+                        curl -u admin1978:Admin1978 ^ 
+                        -X PUT "${ARTIFACTORY_URL}/MyConstruccionRep/proyecto/%BUILD_NUMBER%/${WAR_FILE}" ^
                         -T "target/${WAR_FILE}"
                     """
                 }
@@ -68,6 +67,6 @@ pipeline
         }
         failure {
             echo 'Pipeline falló'
-        }
-    }
+        }
+    }
 }
