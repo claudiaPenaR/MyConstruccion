@@ -47,16 +47,16 @@ pipeline {
         }
         
         stage('Deploy to Artifactory') {
-            steps {
-                script {
-                    // Usar el nombre correcto del archivo WAR
-                    bat """
-                        curl -u admin1978:Admin1978/ -X PUT "http://localhost:8082/artifactory/MyConstruccionRep/my-construccion-0.0.1-SNAPSHOT.war" -T "target/my-construccion-0.0.1-SNAPSHOT.war"
-
-                    """
-                }
-            }
+    steps {
+        script {
+            // Usar el nombre correcto del archivo WAR
+            bat """
+                curl.exe -u admin:Admin1978/ -X PUT "http://localhost:8082/artifactory/MyConstruccionRep/my-construccion-0.0.1-SNAPSHOT.war" -T "target\\my-construccion-0.0.1-SNAPSHOT.war"
+            """
         }
+    }
+}
+
     }
     
     post {
