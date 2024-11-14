@@ -51,7 +51,7 @@ pipeline {
         script {
             // Usar el nombre correcto del archivo WAR
             bat """
-                curl -u admin:Admin1978/ -X PUT "http://localhost:8082/artifactory/MyConstruccionRep/my-construccion-0.0.1-SNAPSHOT.war" -T "target\\my-construccion-0.0.1-SNAPSHOT.war"
+               curl -u admin:Admin1978/ -X PUT "${ARTIFACTORY_URL}/MyContruccionRep/%BUILD_NUMBER%/${WAR_FILE}" -T "target/${WAR_FILE}"
             """
         }
     }
